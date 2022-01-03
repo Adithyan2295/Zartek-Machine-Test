@@ -1,0 +1,14 @@
+[
+    {
+        "merged": "/Users/adithyans/Desktop/MachineTest/machine_test/Zartek-Machine-Test/machine_test/build/google_sign_in/intermediates/res/merged/debug/color/common_google_signin_btn_text_light.xml",
+        "source": "/Users/adithyans/.gradle/caches/transforms-2/files-2.1/39b592cb7ca26f88251c2a5b6d652bf6/jetified-play-services-base-16.0.1/res/color/common_google_signin_btn_text_light.xml"
+    },
+    {
+        "merged": "/Users/adithyans/Desktop/MachineTest/machine_test/Zartek-Machine-Test/machine_test/build/google_sign_in/intermediates/res/merged/debug/color/common_google_signin_btn_text_dark.xml",
+        "source": "/Users/adithyans/.gradle/caches/transforms-2/files-2.1/39b592cb7ca26f88251c2a5b6d652bf6/jetified-play-services-base-16.0.1/res/color/common_google_signin_btn_text_dark.xml"
+    },
+    {
+        "merged": "/Users/adithyans/Desktop/MachineTest/machine_test/Zartek-Machine-Test/machine_test/build/google_sign_in/intermediates/res/merged/debug/color/common_google_signin_btn_tint.xml",
+        "source": "/Users/adithyans/.gradle/caches/transforms-2/files-2.1/39b592cb7ca26f88251c2a5b6d652bf6/jetified-play-services-base-16.0.1/res/color/common_google_signin_btn_tint.xml"
+    }
+]

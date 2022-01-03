@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "816448683172",
+    "project_id": "mocky-b0622",
+    "storage_bucket": "mocky-b0622.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:816448683172:android:d4bc244c3a346b41beba31",
+        "android_client_info": {
+          "package_name": "com.mocky.app.machine_test"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "816448683172-pnfp6u264bhnn01ehbo11794f3mtelq8.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCVKYuzK5g37twG0c3z5C5Cpi_GGBML34w"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "816448683172-pnfp6u264bhnn01ehbo11794f3mtelq8.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

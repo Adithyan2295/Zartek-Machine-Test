@@ -1,0 +1,4 @@
+#Mon Jan 03 16:39:29 IST 2022
+base.0=/Users/adithyans/Desktop/MachineTest/machine_test/Zartek-Machine-Test/machine_test/build/app/intermediates/dex/debug/mergeDexDebug/classes.dex
+renamed.0=classes.dex
+path.0=classes.dex
