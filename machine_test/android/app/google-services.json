@@ -14,6 +14,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "816448683172-cq7clpa2sggvv8t2h7aboer4obrksk97.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.mocky.app.machine_test",
+            "certificate_hash": "771afc0fcab53d43039fe409947a23e0720d68c4"
+          }
+        },
+        {
           "client_id": "816448683172-pnfp6u264bhnn01ehbo11794f3mtelq8.apps.googleusercontent.com",
           "client_type": 3
         }

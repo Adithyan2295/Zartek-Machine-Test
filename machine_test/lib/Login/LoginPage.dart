@@ -50,7 +50,7 @@ class LoginPageState extends State<LoginPage> {
         ),
         onPressed: () {
           isGoogle
-              ? _loginController.googleButtonAction()
+              ? _loginController.googleButtonAction(context)
               : _loginController.phoneButtonAction();
         },
         child: loginButtonView(isGoogle));
