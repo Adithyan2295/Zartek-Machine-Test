@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:machine_test/HomePage/HomePage.dart';
 import 'package:machine_test/Model/MenuModel.dart';
 import 'package:machine_test/Model/SingleTonModel.dart';
 import 'package:mvc_pattern/mvc_pattern.dart';
@@ -41,13 +42,17 @@ class HomePageController extends ControllerMVC {
 
   fetchAPIData() async {
     Singleton.singleton.isLoading = true;
+    Singleton.singleton.menuModel = null;
+    globalHomepageState.callSetState();
     var getData = await getDataFunction();
     if (getData != false) {
       Singleton.singleton.apiData = getData.body;
       Singleton.singleton.menuModel = menuModelFromJson(getData.body);
       Singleton.singleton.isLoading = false;
+      globalHomepageState.callSetState();
     } else {
       Singleton.singleton.isLoading = false;
+      globalHomepageState.callSetState();
     }
   }
 }

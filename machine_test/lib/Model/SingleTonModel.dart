@@ -8,7 +8,7 @@ class Singleton {
   }
 
   String userToken;
-  bool isLoading = false;
+  bool isLoading = true;
   List<MenuModel> menuModel = [];
   var apiData;
 

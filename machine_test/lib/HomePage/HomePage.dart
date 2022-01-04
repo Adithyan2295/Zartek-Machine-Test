@@ -5,12 +5,18 @@ import 'package:machine_test/HomePage/HomePageModel.dart';
 import 'package:machine_test/Model/SingleTonModel.dart';
 import 'package:badges/badges.dart';
 
+
+HomePageState globalHomepageState;
 class HomePage extends StatefulWidget {
   @override
-  _HomePageState createState() => _HomePageState();
+  HomePageState createState(){
+    globalHomepageState = HomePageState();
+    return globalHomepageState;
+  }
 }
 
-class _HomePageState extends State<HomePage> {
+class HomePageState extends State<HomePage> {
+  
   HomePageController homePageController = HomePageController();
   HomePageModel homePageModel = HomePageModel();
 
@@ -21,19 +27,28 @@ class _HomePageState extends State<HomePage> {
     homePageController.fetchAPIData();
   }
 
+  callSetState() {
+    setState(() { });
+  }
   @override
   Widget build(BuildContext context) {
     return mainWidget();
   }
 
   Widget mainWidget() {
-    return DefaultTabController(
-      length: Singleton.singleton.menuModel[0].tableMenuList.length,
-      child: Scaffold(
-        appBar: appbar(),
-        drawer: drawer(),
-        body: body(),
-      ),
+    return Stack(
+      children: [
+        Singleton.singleton.menuModel != null?
+        DefaultTabController(
+          length: Singleton.singleton.menuModel[0].tableMenuList.length,
+          child: Scaffold(
+            appBar: appbar(),
+            drawer: drawer(),
+            body: body(),
+          ),
+        ):
+        Positioned.fill(child: loadingIndicator())
+      ],
     );
   }
 
@@ -167,19 +182,22 @@ class _HomePageState extends State<HomePage> {
             )
           ],
         )),
-        Positioned.fill(child: loadingIndicator())
+        // Positioned.fill(child: loadingIndicator())
       ],
     );
   }
 
   loadingIndicator() {
-    return Container(
-      height: MediaQuery.of(context).size.height,
-      width: MediaQuery.of(context).size.width,
-      color: Colors.white,
-      child: Center(
-        child:
-            Container(color: Colors.white, child: CircularProgressIndicator()),
+    return Visibility(
+      visible: Singleton.singleton.isLoading,
+      child: Container(
+        height: MediaQuery.of(context).size.height,
+        width: MediaQuery.of(context).size.width,
+        color: Colors.white,
+        child: Center(
+          child:
+              Container(color: Colors.white, child: CircularProgressIndicator()),
+        ),
       ),
     );
   }

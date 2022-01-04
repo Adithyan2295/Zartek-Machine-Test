@@ -3,5 +3,6 @@ import 'package:mvc_pattern/mvc_pattern.dart';
 
 class HomePageModel extends ModelMVC {
   User user = FirebaseAuth.instance.currentUser;
+  bool isLoading = false;
 }
   
