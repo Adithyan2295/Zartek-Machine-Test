@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 import 'package:machine_test/Model/SingleTonModel.dart';
 import 'package:mvc_pattern/mvc_pattern.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -13,10 +14,11 @@ class HomePageController extends ControllerMVC {
   }
 
   //Remove token from secure storage to logout
-  removeFirebaseToken() async{
+  removeFirebaseToken(BuildContext context) async{
     final storage = new FlutterSecureStorage();
     await storage.delete(key: 'userToken');
     Singleton.singleton.userToken = null;
+    Navigator.pushReplacementNamed(context, '/login');
   }
 
 }

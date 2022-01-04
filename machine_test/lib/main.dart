@@ -35,6 +35,10 @@ class MockAPP extends StatelessWidget {
       ),
       debugShowCheckedModeBanner: false,
       home:this.loggedIn ? HomePage() : LoginPage(),
+      routes: {
+        '/login': (context) => LoginPage(),
+        '/home': (context) => HomePage(),
+      },
     );
   }
 }
