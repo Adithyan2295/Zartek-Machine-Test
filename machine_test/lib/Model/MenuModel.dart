@@ -129,6 +129,7 @@ class CategoryDish {
         this.dishType,
         this.nexturl,
         this.addonCat,
+        this.dishOrdeCount
     });
 
     String dishId;
@@ -136,12 +137,13 @@ class CategoryDish {
     double dishPrice;
     String dishImage;
     DishCurrency dishCurrency;
-    var dishCalories;
+    double dishCalories;
     String dishDescription;
     bool dishAvailability;
     var dishType;
     String nexturl;
     List<AddonCat> addonCat;
+    int dishOrdeCount;
 
     factory CategoryDish.fromJson(Map<String, dynamic> json) => CategoryDish(
         dishId: json["dish_id"],
@@ -155,6 +157,7 @@ class CategoryDish {
         dishType: json["dish_Type"],
         nexturl: json["nexturl"] == null ? null : json["nexturl"],
         addonCat: json["addonCat"] == null ? null : List<AddonCat>.from(json["addonCat"].map((x) => AddonCat.fromJson(x))),
+        dishOrdeCount: 0
     );
 
     Map<String, dynamic> toJson() => {

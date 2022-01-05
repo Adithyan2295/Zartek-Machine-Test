@@ -11,6 +11,7 @@ class Singleton {
   bool isLoading = true;
   List<MenuModel> menuModel = [];
   var apiData;
+  int cartCount = 0;
 
   Singleton._internal();
 }

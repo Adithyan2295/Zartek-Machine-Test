@@ -2,21 +2,21 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:machine_test/HomePage/HomePageController.dart';
 import 'package:machine_test/HomePage/HomePageModel.dart';
+import 'package:machine_test/Model/MenuModel.dart';
 import 'package:machine_test/Model/SingleTonModel.dart';
 import 'package:badges/badges.dart';
 
-
 HomePageState globalHomepageState;
+
 class HomePage extends StatefulWidget {
   @override
-  HomePageState createState(){
+  HomePageState createState() {
     globalHomepageState = HomePageState();
     return globalHomepageState;
   }
 }
 
 class HomePageState extends State<HomePage> {
-  
   HomePageController homePageController = HomePageController();
   HomePageModel homePageModel = HomePageModel();
 
@@ -28,8 +28,9 @@ class HomePageState extends State<HomePage> {
   }
 
   callSetState() {
-    setState(() { });
+    setState(() {});
   }
+
   @override
   Widget build(BuildContext context) {
     return mainWidget();
@@ -38,16 +39,16 @@ class HomePageState extends State<HomePage> {
   Widget mainWidget() {
     return Stack(
       children: [
-        Singleton.singleton.menuModel != null?
-        DefaultTabController(
-          length: Singleton.singleton.menuModel[0].tableMenuList.length,
-          child: Scaffold(
-            appBar: appbar(),
-            drawer: drawer(),
-            body: body(),
-          ),
-        ):
-        Positioned.fill(child: loadingIndicator())
+        Singleton.singleton.menuModel != null
+            ? DefaultTabController(
+                length: Singleton.singleton.menuModel[0].tableMenuList.length,
+                child: Scaffold(
+                  appBar: appbar(),
+                  drawer: drawer(),
+                  body: body(),
+                ),
+              )
+            : Positioned.fill(child: loadingIndicator())
       ],
     );
   }
@@ -149,7 +150,7 @@ class HomePageState extends State<HomePage> {
         animationDuration: Duration(milliseconds: 300),
         animationType: BadgeAnimationType.slide,
         badgeContent: Text(
-          '7',
+          Singleton.singleton.cartCount.toString(),
           style: TextStyle(color: Colors.white),
         ),
         child: IconButton(icon: Icon(Icons.shopping_cart), onPressed: () {}),
@@ -158,33 +159,7 @@ class HomePageState extends State<HomePage> {
   }
 
   body() {
-    return Stack(
-      children: [
-        Center(
-            child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text(homePageModel.user.uid),
-            Text(homePageModel.user.email),
-            Text(homePageModel.user.displayName),
-            CircleAvatar(
-              backgroundImage: NetworkImage(homePageModel.user.photoURL),
-              radius: 20,
-            ),
-            FloatingActionButton(
-              onPressed: () {
-                // FirebaseAuth.instance.signOut();
-                // homePageController.removeFirebaseToken(context);
-                print(Singleton
-                    .singleton.menuModel[0].tableMenuList[0].menuCategory);
-              },
-              child: Icon(Icons.exit_to_app),
-            )
-          ],
-        )),
-        // Positioned.fill(child: loadingIndicator())
-      ],
-    );
+    return TabBarView(children: tabbarView());
   }
 
   loadingIndicator() {
@@ -195,8 +170,138 @@ class HomePageState extends State<HomePage> {
         width: MediaQuery.of(context).size.width,
         color: Colors.white,
         child: Center(
-          child:
-              Container(color: Colors.white, child: CircularProgressIndicator()),
+          child: Container(
+              color: Colors.white, child: CircularProgressIndicator()),
+        ),
+      ),
+    );
+  }
+
+  List<Widget> tabbarView() {
+    var temp = Singleton.singleton.menuModel[0].tableMenuList;
+    List<Widget> tab = [];
+    for (var tempMenutype in temp) {
+      tab.add(ListView.builder(
+          itemBuilder: (context, index) {
+            return viewCardType(tempMenutype, index);
+          },
+          itemCount: tempMenutype.categoryDishes.length));
+    }
+    return tab;
+  }
+
+  viewCardType(TableMenuList tempMenutype, int index) {
+    return Container(
+      color: Colors.grey.withOpacity(0.5),
+      padding: EdgeInsets.only(bottom: 1),
+      child: Container(
+        padding: EdgeInsets.only(bottom: 10, top: 10),
+        color: Colors.white,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            topContainer(tempMenutype, index),
+            Container(
+                padding: EdgeInsets.only(left: 10, right: 10),
+                child: Text(
+                  tempMenutype.categoryDishes[index].dishDescription,
+                  overflow: TextOverflow.clip,
+                  style: TextStyle(fontSize: 12, color: Colors.grey),
+                )),
+            SizedBox(
+              height: 10,
+            ),
+            buttonWidget(tempMenutype, index),
+            Visibility(
+              visible: tempMenutype.categoryDishes[index].addonCat.isNotEmpty,
+              child: Container(
+                  padding: EdgeInsets.only(
+                    left: 10,
+                  ),
+                  child: Text("Customizations Available ",
+                      style: TextStyle(fontSize: 12, color: Colors.red))),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  topContainer(TableMenuList tempMenutype, int index) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Container(
+                padding: EdgeInsets.only(left: 10),
+                width: MediaQuery.of(context).size.width / 2,
+                child: Text(
+                  tempMenutype.categoryDishes[index].dishName,
+                  overflow: TextOverflow.clip,
+                )),
+            Container(
+                padding: EdgeInsets.only(left: 10),
+                child:
+                    Text("₹ ${tempMenutype.categoryDishes[index].dishPrice}")),
+          ],
+        ),
+        Container(
+          padding: EdgeInsets.only(top: 30),
+          child: Text("${tempMenutype.categoryDishes[index].dishCalories.toInt()} calories ".toString())),
+        Container(
+          height: MediaQuery.of(context).size.height/10.8,
+          width: MediaQuery.of(context).size.width/5.1,
+          margin: EdgeInsets.only(right: 10),
+          child: Image.asset('assets/food.png'),
+        ),
+      ],
+    );
+  }
+
+  buttonWidget(TableMenuList tempMenutype, int index) {
+    return Container(
+        margin: EdgeInsets.only(
+          left: 10,
+        ),
+        width: MediaQuery.of(context).size.width / 3,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(20),
+          color: Colors.green,
+        ),
+        height: 40,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            addAndMinus(false, tempMenutype, index),
+            Text(tempMenutype.categoryDishes[index].dishOrdeCount.toString(),
+                style: TextStyle(fontSize: 16, color: Colors.white)),
+            addAndMinus(true, tempMenutype, index),
+          ],
+        ));
+  }
+
+  Widget addAndMinus(isAdd, TableMenuList tempMenutype, int index) {
+    return GestureDetector(
+      onTap:(tempMenutype.categoryDishes[index].dishOrdeCount == 0 && !isAdd)?null : () {
+        isAdd
+            ? tempMenutype.categoryDishes[index].dishOrdeCount++
+             : tempMenutype.categoryDishes[index].dishOrdeCount--;
+        isAdd
+            ? Singleton.singleton.cartCount++
+            : Singleton.singleton.cartCount--;
+        setState(() {});
+      },
+      child: CircleAvatar(
+        backgroundColor: Colors.white,
+        radius: 12,
+        child: Image.asset(
+          isAdd ? "assets/add.png" : "assets/minus.png",
+          fit: BoxFit.fill,
         ),
       ),
     );
