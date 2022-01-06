@@ -1,7 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:machine_test/Checkout/CheckoutPage.dart';
 import 'package:machine_test/HomePage/HomePageController.dart';
 import 'package:machine_test/HomePage/HomePageModel.dart';
+import 'package:machine_test/Model/CheckoutListModel.dart';
 import 'package:machine_test/Model/MenuModel.dart';
 import 'package:machine_test/Model/SingleTonModel.dart';
 import 'package:badges/badges.dart';
@@ -153,7 +155,18 @@ class HomePageState extends State<HomePage> {
           Singleton.singleton.cartCount.toString(),
           style: TextStyle(color: Colors.white),
         ),
-        child: IconButton(icon: Icon(Icons.shopping_cart), onPressed: () {}),
+        child: IconButton(
+            icon: Icon(Icons.shopping_cart),
+            onPressed: () {
+              Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => CheckoutPage(),
+                          fullscreenDialog: true))
+                  .then((value) {
+                setState(() {});
+              });
+            }),
       ),
     );
   }
@@ -180,17 +193,17 @@ class HomePageState extends State<HomePage> {
   List<Widget> tabbarView() {
     var temp = Singleton.singleton.menuModel[0].tableMenuList;
     List<Widget> tab = [];
-    for (var tempMenutype in temp) {
+    temp.asMap().forEach((mainIndex, tempMenutype) {
       tab.add(ListView.builder(
           itemBuilder: (context, index) {
-            return viewCardType(tempMenutype, index);
+            return viewCardType(tempMenutype, index, mainIndex);
           },
           itemCount: tempMenutype.categoryDishes.length));
-    }
+    });
     return tab;
   }
 
-  viewCardType(TableMenuList tempMenutype, int index) {
+  viewCardType(TableMenuList tempMenutype, int index, int mainIndex) {
     return Container(
       color: Colors.grey.withOpacity(0.5),
       padding: EdgeInsets.only(bottom: 1),
@@ -201,7 +214,7 @@ class HomePageState extends State<HomePage> {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            topContainer(tempMenutype, index),
+            topContainer(tempMenutype, index, mainIndex),
             Container(
                 padding: EdgeInsets.only(left: 10, right: 10),
                 child: Text(
@@ -212,7 +225,7 @@ class HomePageState extends State<HomePage> {
             SizedBox(
               height: 10,
             ),
-            buttonWidget(tempMenutype, index),
+            buttonWidget(tempMenutype, index, mainIndex),
             Visibility(
               visible: tempMenutype.categoryDishes[index].addonCat.isNotEmpty,
               child: Container(
@@ -228,10 +241,10 @@ class HomePageState extends State<HomePage> {
     );
   }
 
-  topContainer(TableMenuList tempMenutype, int index) {
+  topContainer(TableMenuList tempMenutype, int index, int mainIndex) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Column(
           mainAxisAlignment: MainAxisAlignment.start,
@@ -251,11 +264,13 @@ class HomePageState extends State<HomePage> {
           ],
         ),
         Container(
-          padding: EdgeInsets.only(top: 30),
-          child: Text("${tempMenutype.categoryDishes[index].dishCalories.toInt()} calories ".toString())),
+            padding: EdgeInsets.only(top: 30),
+            child: Text(
+                "${tempMenutype.categoryDishes[index].dishCalories.toInt()} calories "
+                    .toString())),
         Container(
-          height: MediaQuery.of(context).size.height/10.8,
-          width: MediaQuery.of(context).size.width/5.1,
+          height: MediaQuery.of(context).size.height / 10.8,
+          width: MediaQuery.of(context).size.width / 5.1,
           margin: EdgeInsets.only(right: 10),
           child: Image.asset('assets/food.png'),
         ),
@@ -263,7 +278,7 @@ class HomePageState extends State<HomePage> {
     );
   }
 
-  buttonWidget(TableMenuList tempMenutype, int index) {
+  buttonWidget(TableMenuList tempMenutype, int index, int mainIndex) {
     return Container(
         margin: EdgeInsets.only(
           left: 10,
@@ -277,25 +292,49 @@ class HomePageState extends State<HomePage> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            addAndMinus(false, tempMenutype, index),
+            addAndMinus(false, tempMenutype, index, mainIndex),
             Text(tempMenutype.categoryDishes[index].dishOrdeCount.toString(),
                 style: TextStyle(fontSize: 16, color: Colors.white)),
-            addAndMinus(true, tempMenutype, index),
+            addAndMinus(true, tempMenutype, index, mainIndex),
           ],
         ));
   }
 
-  Widget addAndMinus(isAdd, TableMenuList tempMenutype, int index) {
+  Widget addAndMinus(
+      isAdd, TableMenuList tempMenutype, int index, int mainIndex) {
     return GestureDetector(
-      onTap:(tempMenutype.categoryDishes[index].dishOrdeCount == 0 && !isAdd)?null : () {
-        isAdd
-            ? tempMenutype.categoryDishes[index].dishOrdeCount++
-             : tempMenutype.categoryDishes[index].dishOrdeCount--;
-        isAdd
-            ? Singleton.singleton.cartCount++
-            : Singleton.singleton.cartCount--;
-        setState(() {});
-      },
+      onTap: (tempMenutype.categoryDishes[index].dishOrdeCount == 0 && !isAdd)
+          ? null
+          : () {
+              isAdd
+                  ? tempMenutype.categoryDishes[index].dishOrdeCount++
+                  : tempMenutype.categoryDishes[index].dishOrdeCount--;
+              isAdd
+                  ? Singleton.singleton.cartCount++
+                  : Singleton.singleton.cartCount--;
+              CheckoutListModel checkoutListModel = CheckoutListModel();
+              if (isAdd) {
+                checkoutListModel.mainIndex = mainIndex;
+                checkoutListModel.index = index;
+                checkoutListModel.tableMenuList = tempMenutype;
+                Singleton.singleton
+                        .cartData[tempMenutype.categoryDishes[index].dishId] =
+                    tempMenutype.categoryDishes[index];
+              } else if (tempMenutype.categoryDishes[index].dishOrdeCount ==
+                  0) {
+                Singleton.singleton.cartData
+                    .remove(tempMenutype.categoryDishes[index].dishId);
+              } else {
+                checkoutListModel.mainIndex = mainIndex;
+                checkoutListModel.index = index;
+                checkoutListModel.tableMenuList = tempMenutype;
+                Singleton.singleton
+                        .cartData[tempMenutype.categoryDishes[index].dishId] =
+                    tempMenutype.categoryDishes[index];
+              }
+
+              setState(() {});
+            },
       child: CircleAvatar(
         backgroundColor: Colors.white,
         radius: 12,

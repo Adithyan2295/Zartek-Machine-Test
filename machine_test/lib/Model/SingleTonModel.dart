@@ -12,6 +12,7 @@ class Singleton {
   List<MenuModel> menuModel = [];
   var apiData;
   int cartCount = 0;
+  Map<String, dynamic> cartData = {};
 
   Singleton._internal();
 }

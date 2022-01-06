@@ -43,6 +43,7 @@ class HomePageController extends ControllerMVC {
   fetchAPIData() async {
     Singleton.singleton.isLoading = true;
     Singleton.singleton.menuModel = null;
+     Singleton.singleton.cartCount = 0;
     globalHomepageState.callSetState();
     var getData = await getDataFunction();
     if (getData != false) {
