@@ -333,14 +333,7 @@ class HomePageState extends State<HomePage> {
 
               setState(() {});
             },
-      child: CircleAvatar(
-        backgroundColor: Colors.white,
-        radius: 12,
-        child: Image.asset(
-          isAdd ? "assets/add.png" : "assets/minus.png",
-          fit: BoxFit.fill,
-        ),
-      ),
+      child: Icon(isAdd? Icons.add : Icons.remove,color: Colors.white,),
     );
   }
 

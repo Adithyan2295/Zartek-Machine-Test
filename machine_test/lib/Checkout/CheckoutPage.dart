@@ -28,8 +28,24 @@ class _CheckoutPageState extends State<CheckoutPage> {
 
   body() {
     return Container(
-      child: Column(
-        children: menuList(),
+      child: SingleChildScrollView(
+        child: Container(
+          margin: EdgeInsets.only(left: 20, right: 20,top: 20,bottom: 20),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            boxShadow: [
+              BoxShadow(
+                color: Colors.grey.withOpacity(0.5),
+                spreadRadius: 5,
+                blurRadius: 7,
+                offset: Offset(0, 3), // changes position of shadow
+              ),
+            ],
+          ),
+          child: Column(
+            children: menuList(),
+          ),
+        ),
       ),
     );
   }
@@ -67,14 +83,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                 Singleton.singleton.cartData[tempMenutype].dishPrice;
         setState(() {});
       },
-      child: CircleAvatar(
-        backgroundColor: Colors.white,
-        radius: 12,
-        child: Image.asset(
-          isAdd ? "assets/add.png" : "assets/minus.png",
-          fit: BoxFit.fill,
-        ),
-      ),
+      child: Icon(isAdd? Icons.add : Icons.remove,color: Colors.white,),
     );
   }
 
@@ -87,10 +96,10 @@ class _CheckoutPageState extends State<CheckoutPage> {
         ),
         width: MediaQuery.of(context).size.width / 3.5,
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(20),
+          borderRadius: BorderRadius.circular(12),
           color: Colors.green,
         ),
-        height: 40,
+        height: 30,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
@@ -116,39 +125,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
     tab.add(topHeading());
     for (var tempMenutype in temp) {
       tab.add(
-        Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Container(
-                  padding: EdgeInsets.only(left: 10),
-                  width: MediaQuery.of(context).size.width / 2,
-                  child: Text(
-                    Singleton.singleton.cartData[tempMenutype].dishName,
-                    overflow: TextOverflow.clip,
-                  ),
-                ),
-                buttonWidget(tempMenutype),
-                Container(
-                    padding: EdgeInsets.only(left: 5),
-                    child: Text(
-                        "₹ ${Singleton.singleton.cartData[tempMenutype].dishPrice * Singleton.singleton.cartData[tempMenutype].dishOrdeCount}")),
-              ],
-            ),
-            Container(
-                padding: EdgeInsets.only(left: 10),
-                child: Text(
-                    "₹ ${Singleton.singleton.cartData[tempMenutype].dishPrice}")),
-            Container(
-                padding: EdgeInsets.only(left: 10),
-                child: Text(
-                    "${Singleton.singleton.cartData[tempMenutype].dishCalories.toInt()} calories")),
-          ],
-        ),
+        cardContent(tempMenutype),
       );
     }
     tab.add(totalAmount());
@@ -159,6 +136,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
     return Container(
       height: 50,
       width: MediaQuery.of(context).size.width - 40,
+      margin: EdgeInsets.fromLTRB(5, 5, 5, 20),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(3),
         color: Colors.green,
@@ -177,12 +155,70 @@ class _CheckoutPageState extends State<CheckoutPage> {
       width: MediaQuery.of(context).size.width - 40,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(3),
-        color: Colors.green,
+        color: Colors.white,
       ),
-      child: Center(
-        child: Text('Total Amount : ${_checkoutModel.totalPrice}',
-            style: TextStyle(fontSize: 16, color: Colors.white)),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Container(
+            margin: EdgeInsets.only(left: 10,),
+            child: Text('Total Amount',
+                style: TextStyle(fontSize: 16, color: Colors.black,fontWeight: FontWeight.bold)),
+          ),
+          Container(
+            margin: EdgeInsets.only(right: 20),
+            child: Text(
+              '\₹ ${_checkoutModel.totalPrice.toStringAsFixed(2)}',
+              style: TextStyle(fontSize: 16, color: Colors.green,fontWeight: FontWeight.normal),
+            ),
+          ),
+        ],
       ),
+    );
+  }
+
+  Widget cardContent(String tempMenutype) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Container(margin: EdgeInsets.only(bottom: 20),
+              padding: EdgeInsets.only(left: 10),
+              width: MediaQuery.of(context).size.width / 3,
+              child: Text(
+                Singleton.singleton.cartData[tempMenutype].dishName,
+                overflow: TextOverflow.clip,
+              ),
+            ),
+            buttonWidget(tempMenutype),
+            Container(
+                padding: EdgeInsets.only(left: 15),
+                child: Text(
+                    "₹ ${Singleton.singleton.cartData[tempMenutype].dishPrice * Singleton.singleton.cartData[tempMenutype].dishOrdeCount}")),
+          ],
+        ),
+        Container(
+          margin: EdgeInsets.only(bottom: 10),
+            padding: EdgeInsets.only(left: 10),
+            child: Text(
+                "₹ ${Singleton.singleton.cartData[tempMenutype].dishPrice}")),
+        Container(
+          margin: EdgeInsets.only(bottom: 30),
+            padding: EdgeInsets.only(left: 10),
+            child: Text(
+                "${Singleton.singleton.cartData[tempMenutype].dishCalories.toInt()} calories")),
+        Container(
+          margin: EdgeInsets.only(bottom: 10,left: 10,right: 10),
+          height: 1,
+          width: MediaQuery.of(context).size.width,
+          color: Colors.grey.withOpacity(0.4),
+
+        )
+      ],
     );
   }
 }
