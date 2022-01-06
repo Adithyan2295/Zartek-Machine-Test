@@ -146,27 +146,25 @@ class HomePageState extends State<HomePage> {
   }
 
   Widget cartIcon() {
-    return Center(
-      child: Badge(
-        position: BadgePosition.topEnd(top: 0, end: 2),
-        animationDuration: Duration(milliseconds: 300),
-        animationType: BadgeAnimationType.slide,
-        badgeContent: Text(
-          Singleton.singleton.cartCount.toString(),
-          style: TextStyle(color: Colors.white),
+    return GestureDetector(
+      onTap: () {
+        badgeOntap();
+      },
+      child: Center(
+        child: Badge(
+          position: BadgePosition.topEnd(top: 0, end: 2),
+          animationDuration: Duration(milliseconds: 300),
+          animationType: BadgeAnimationType.slide,
+          badgeContent: Text(
+            Singleton.singleton.cartCount.toString(),
+            style: TextStyle(color: Colors.white),
+          ),
+          child: IconButton(
+              icon: Icon(Icons.shopping_cart),
+              onPressed: () {
+                badgeOntap();
+              }),
         ),
-        child: IconButton(
-            icon: Icon(Icons.shopping_cart),
-            onPressed: () {
-              Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => CheckoutPage(),
-                          fullscreenDialog: true))
-                  .then((value) {
-                setState(() {});
-              });
-            }),
       ),
     );
   }
@@ -344,5 +342,31 @@ class HomePageState extends State<HomePage> {
         ),
       ),
     );
+  }
+
+  badgeOntap() {
+    if (Singleton.singleton.cartCount != 0) {
+      var temp = Singleton.singleton.cartData.keys;
+      var toRemove = [];
+      for (var tempMenutype in temp) {
+        print("object");
+        print(Singleton.singleton.cartData[tempMenutype].dishOrdeCount);
+        if (Singleton.singleton.cartData[tempMenutype].dishOrdeCount == 0) {
+          toRemove.add(tempMenutype);
+          // Singleton.singleton.cartData.remove(tempMenutype);
+        }
+      }
+      for (var tempMenutype in toRemove) {
+        print("****************");
+        Singleton.singleton.cartData.remove(tempMenutype);
+      }
+      Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => CheckoutPage(), fullscreenDialog: true))
+          .then((value) {
+        setState(() {});
+      });
+    }
   }
 }
