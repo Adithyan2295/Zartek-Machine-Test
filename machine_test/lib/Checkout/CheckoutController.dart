@@ -8,8 +8,18 @@ class CheckoutController extends ControllerMVC {
 
     for (var tempMenutype in temp) {
       var tempMenu = Singleton.singleton.cartData[tempMenutype];
-        totalPrice += tempMenu.dishPrice * tempMenu.dishOrdeCount;
+      totalPrice += tempMenu.dishPrice * tempMenu.dishOrdeCount;
     }
     return totalPrice;
+  }
+
+  resetCount() {
+    var temp = Singleton.singleton.cartData.keys;
+    for (var tempMenutype in temp) {
+      var tempMenu = Singleton.singleton.cartData[tempMenutype];
+      tempMenu.dishOrdeCount = 0;
+    }
+    Singleton.singleton.cartData.clear();
+    Singleton.singleton.cartCount = 0;
   }
 }

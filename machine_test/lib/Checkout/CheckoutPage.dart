@@ -27,24 +27,33 @@ class _CheckoutPageState extends State<CheckoutPage> {
   }
 
   body() {
-    return Container(
-      child: SingleChildScrollView(
-        child: Container(
-          margin: EdgeInsets.only(left: 20, right: 20,top: 20,bottom: 20),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            boxShadow: [
-              BoxShadow(
-                color: Colors.grey.withOpacity(0.5),
-                spreadRadius: 5,
-                blurRadius: 7,
-                offset: Offset(0, 3), // changes position of shadow
-              ),
-            ],
-          ),
-          child: Column(
-            children: menuList(),
-          ),
+    return Stack(
+      children: [
+        Positioned.fill(
+          child: scrollList(),
+        ),
+        Positioned(bottom: 10, child: loginButtonView())
+      ],
+    );
+  }
+
+  scrollList() {
+    return SingleChildScrollView(
+      child: Container(
+        margin: EdgeInsets.only(left: 20, right: 20, top: 20, bottom: 60),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.withOpacity(0.5),
+              spreadRadius: 5,
+              blurRadius: 7,
+              offset: Offset(0, 3), // changes position of shadow
+            ),
+          ],
+        ),
+        child: Column(
+          children: menuList(),
         ),
       ),
     );
@@ -83,7 +92,10 @@ class _CheckoutPageState extends State<CheckoutPage> {
                 Singleton.singleton.cartData[tempMenutype].dishPrice;
         setState(() {});
       },
-      child: Icon(isAdd? Icons.add : Icons.remove,color: Colors.white,),
+      child: Icon(
+        isAdd ? Icons.add : Icons.remove,
+        color: Colors.white,
+      ),
     );
   }
 
@@ -97,7 +109,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
         width: MediaQuery.of(context).size.width / 3.5,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(12),
-          color: Colors.green,
+          color: Colors.green.shade800,
         ),
         height: 30,
         child: Row(
@@ -139,7 +151,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
       margin: EdgeInsets.fromLTRB(5, 5, 5, 20),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(3),
-        color: Colors.green,
+        color: Colors.green.shade800,
       ),
       child: Center(
         child: Text(
@@ -161,15 +173,23 @@ class _CheckoutPageState extends State<CheckoutPage> {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Container(
-            margin: EdgeInsets.only(left: 10,),
+            margin: EdgeInsets.only(
+              left: 10,
+            ),
             child: Text('Total Amount',
-                style: TextStyle(fontSize: 16, color: Colors.black,fontWeight: FontWeight.bold)),
+                style: TextStyle(
+                    fontSize: 16,
+                    color: Colors.black,
+                    fontWeight: FontWeight.bold)),
           ),
           Container(
             margin: EdgeInsets.only(right: 20),
             child: Text(
               '\₹ ${_checkoutModel.totalPrice.toStringAsFixed(2)}',
-              style: TextStyle(fontSize: 16, color: Colors.green,fontWeight: FontWeight.normal),
+              style: TextStyle(
+                  fontSize: 16,
+                  color: Colors.green.shade800,
+                  fontWeight: FontWeight.normal),
             ),
           ),
         ],
@@ -186,7 +206,8 @@ class _CheckoutPageState extends State<CheckoutPage> {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Container(margin: EdgeInsets.only(bottom: 20),
+            Container(
+              margin: EdgeInsets.only(bottom: 20),
               padding: EdgeInsets.only(left: 10),
               width: MediaQuery.of(context).size.width / 3,
               child: Text(
@@ -202,23 +223,66 @@ class _CheckoutPageState extends State<CheckoutPage> {
           ],
         ),
         Container(
-          margin: EdgeInsets.only(bottom: 10),
+            margin: EdgeInsets.only(bottom: 10),
             padding: EdgeInsets.only(left: 10),
             child: Text(
                 "₹ ${Singleton.singleton.cartData[tempMenutype].dishPrice}")),
         Container(
-          margin: EdgeInsets.only(bottom: 30),
+            margin: EdgeInsets.only(bottom: 30),
             padding: EdgeInsets.only(left: 10),
             child: Text(
                 "${Singleton.singleton.cartData[tempMenutype].dishCalories.toInt()} calories")),
         Container(
-          margin: EdgeInsets.only(bottom: 10,left: 10,right: 10),
+          margin: EdgeInsets.only(bottom: 10, left: 10, right: 10),
           height: 1,
           width: MediaQuery.of(context).size.width,
           color: Colors.grey.withOpacity(0.4),
-
         )
       ],
     );
+  }
+
+  loginButtonView() {
+    return GestureDetector(
+      onTap: () {
+        showDialogue();
+      },
+      child: Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(15),
+          color: Colors.green.shade800,
+        ),
+        margin: EdgeInsets.only(left: 20.0, right: 20.0),
+        width: MediaQuery.of(context).size.width - 40,
+        height: 45,
+        child: Center(
+          child: Text('Place Order',
+              textAlign: TextAlign.center,
+              style: TextStyle(fontSize: 20.0, color: Colors.white)),
+        ),
+      ),
+    );
+  }
+
+  showDialogue() {
+    showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('Order Placed'),
+            content: Text('Your order has been placed successfully'),
+            actions: <Widget>[
+              TextButton(
+                onPressed: () {
+                  _checkoutController.resetCount();
+                  Navigator.of(context).pop();
+                  Navigator.of(context).pop();
+                },
+                child: const Text('OK'),
+              ),
+            ],
+          );
+        });
   }
 }
