@@ -14,6 +14,7 @@ class HomePageController extends ControllerMVC {
     var tokenRegistered = await user.getIdToken();
     final storage = new FlutterSecureStorage();
     await storage.write(key: 'userToken', value: tokenRegistered);
+    await storage.write(key: 'isLoginUsingPhonenumber', value: Singleton.singleton.isLoginUsingPhonenumber.toString());
     Singleton.singleton.userToken = tokenRegistered;
   }
 
@@ -21,6 +22,7 @@ class HomePageController extends ControllerMVC {
   removeFirebaseToken(BuildContext context) async {
     final storage = new FlutterSecureStorage();
     await storage.delete(key: 'userToken');
+    await storage.delete(key: 'isLoginUsingPhonenumber');
     Singleton.singleton.userToken = null;
     Navigator.pushReplacementNamed(context, '/login');
   }

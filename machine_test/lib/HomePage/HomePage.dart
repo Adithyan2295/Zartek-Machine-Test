@@ -94,11 +94,13 @@ class HomePageState extends State<HomePage> {
     return DrawerHeader(
       child: Column(
         children: [
+          !Singleton.singleton.isLoginUsingPhonenumber && homePageModel.user.photoURL!= null?
           CircleAvatar(
             backgroundImage: NetworkImage(homePageModel.user.photoURL),
             radius: 20,
-          ),
-          Text(homePageModel.user.displayName),
+          ):CircleAvatar( child: Icon(Icons.person),),
+          Text(!Singleton.singleton.isLoginUsingPhonenumber? homePageModel.user.displayName 
+          : Singleton.singleton.isLoginUsingPhonenumber? homePageModel.user.phoneNumber : ""),
           Text("${homePageModel.user.uid}"),
         ],
       ),

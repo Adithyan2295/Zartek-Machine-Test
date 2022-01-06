@@ -1,3 +1,4 @@
+
 import 'package:machine_test/Model/MenuModel.dart';
 
 class Singleton {
@@ -13,6 +14,11 @@ class Singleton {
   var apiData;
   int cartCount = 0;
   Map<String, dynamic> cartData = {};
+
+  bool isLoginUsingPhonenumber = false;
+
+  var verificationId;
+  var credential;
 
   Singleton._internal();
 }

@@ -16,8 +16,10 @@ void main() async{
   checkIfLoggedIn() async{
     final storage = new FlutterSecureStorage();
     var token = await storage.read(key: 'userToken');
+    var boolValue = await storage.read(key: 'isLoginUsingPhonenumber');
     if(token != null){
       Singleton.singleton.userToken = token;
+      Singleton.singleton.isLoginUsingPhonenumber = boolValue== 'true' ? true : false;
       return true;
     }
     return false;
