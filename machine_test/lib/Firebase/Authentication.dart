@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:machine_test/Model/SingleTonModel.dart';
 
 class FirebaseService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -23,8 +24,28 @@ class FirebaseService {
     }
   }
 
-  Future<void> signOutFromGoogle() async{
+  Future<void> signOutFromGoogle() async {
     await _googleSignIn.signOut();
     await _auth.signOut();
+  }
+
+  Future registerUser(String mobile,) async {
+    _auth.verifyPhoneNumber(
+        phoneNumber: mobile,
+        timeout: Duration(seconds: 60),
+        verificationCompleted: verificationCompleted,
+        verificationFailed: (FirebaseAuthException authException){
+  print(authException.message);
+},
+        codeSent: codeSend,
+        codeAutoRetrievalTimeout: null);
+  }
+
+  verificationCompleted(AuthCredential authCredential) async{
+     await _auth.signInWithCredential(authCredential);
+  }
+  codeSend (String verificationId, [int forceResendingToken]){
+    print(verificationId);
+    Singleton.singleton.verificationId=verificationId;
   }
 }

@@ -1,6 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:machine_test/Checkout/CheckoutPage.dart';
 import 'package:machine_test/HomePage/HomePage.dart';
 import 'package:machine_test/Login/LoginPage.dart';
 import 'package:machine_test/Model/SingleTonModel.dart';
@@ -15,8 +16,10 @@ void main() async{
   checkIfLoggedIn() async{
     final storage = new FlutterSecureStorage();
     var token = await storage.read(key: 'userToken');
+    var boolValue = await storage.read(key: 'isLoginUsingPhonenumber');
     if(token != null){
       Singleton.singleton.userToken = token;
+      Singleton.singleton.isLoginUsingPhonenumber = boolValue== 'true' ? true : false;
       return true;
     }
     return false;
@@ -38,6 +41,7 @@ class MockAPP extends StatelessWidget {
       routes: {
         '/login': (context) => LoginPage(),
         '/home': (context) => HomePage(),
+        '/checkout': (context) => CheckoutPage(),
       },
     );
   }

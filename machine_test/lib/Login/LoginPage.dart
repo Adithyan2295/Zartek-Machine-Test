@@ -48,10 +48,10 @@ class LoginPageState extends State<LoginPage> {
             borderRadius: BorderRadius.circular(30.0),
           ),
         ),
-        onPressed: () {
+        onPressed: () async{
           isGoogle
               ? _loginController.googleButtonAction(context)
-              : _loginController.phoneButtonAction();
+              : await _loginController.phoneButtonAction(context);
         },
         child: loginButtonView(isGoogle));
   }
